@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./App.css";
 
 // Inline styles
 const styles = {
@@ -438,27 +439,27 @@ export default function App() {
 
   // Progress indicator
   const renderProgress = () => (
-    <div style={styles.progress}>
+    <div className="progress">
       {steps.map((s, i) => (
-        <div key={s} style={styles.progressDot(i === step)} title={s} />
+        <div key={s} className={`progress-dot ${i === step ? 'active' : ''}`} title={s} />
       ))}
     </div>
   );
 
   // Landing Section
   const renderLanding = () => (
-    <section style={styles.section}>
-      <div style={styles.logos}>
+    <section className="section">
+      <div className="logos">
         {/* Replace with real client logos */}
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Mail_%28iOS%29.svg" alt="Client1" style={styles.logo} />
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Gmail_Icon.png" alt="Client2" style={styles.logo} />
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Outlook.com_icon.png" alt="Client3" style={styles.logo} />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Mail_%28iOS%29.svg" alt="Client1" className="logo" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Gmail_Icon.png" alt="Client2" className="logo" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Outlook.com_icon.png" alt="Client3" className="logo" />
       </div>
-      <h1 style={styles.headline}>
+      <h1 className="headline">
         Over 3,200 domains checked this month—are your emails being ignored?
       </h1>
       <input
-        style={styles.input}
+        className="input"
         type="text"
         placeholder="Enter your email domain (e.g. example.com)"
         value={domain}
@@ -466,13 +467,13 @@ export default function App() {
         autoFocus
       />
       <button
-        style={styles.button}
+        className="button"
         onClick={() => setStep(1)}
         disabled={!domain.trim()}
       >
         Check My Email Infrastructure
       </button>
-      <div style={styles.testimonial}>
+      <div className="testimonial">
         "We improved our inbox rate by 22% in 3 weeks—this tool is a must-have!"<br />
         <b>- Jamie, CEO at Tumblerware</b>
       </div>
@@ -481,13 +482,11 @@ export default function App() {
 
   // DNS Checker Section (restyled)
   const renderDnsCheck = () => (
-    <section style={{width:'100%'}}>
-      <h2 style={{fontSize:20, fontWeight:700, color:'#1a2540', marginBottom:16, textAlign:'center', letterSpacing:'-0.5px'}}>{icons.spf} 🔍 Domain Email Infrastructure Check</h2>
-      <div style={{fontSize:15, color:'#374151', marginBottom:8, textAlign:'center'}}>Enter your domain (e.g., example.com):</div>
+    <section className="section">
+      <h2 className="section-title">{icons.spf} 🔍 Domain Email Infrastructure Check</h2>
+      <p className="section-desc">Enter your domain (e.g., example.com):</p>
       <input
-        style={{
-          width:'100%', maxWidth:380, margin:'0 auto 16px auto', display:'block', padding:'12px 16px', fontSize:17, border:'1px solid #bcd0e5', borderRadius:8, outline:'none', boxSizing:'border-box', textAlign:'center', background:'#f7fbff', fontWeight:500
-        }}
+        className="input"
         type="text"
         placeholder="example.com"
         value={domain}
@@ -495,31 +494,29 @@ export default function App() {
         disabled={dnsLoading || sheetsLoading}
       />
       <button
-        style={{
-          width:'100%', maxWidth:220, margin:'0 auto 24px auto', display:'block', padding:'12px 0', background:'#2563eb', color:'#fff', fontWeight:600, fontSize:17, border:'none', borderRadius:8, cursor:'pointer', boxShadow:'0 2px 8px #bcd0e522', transition:'background 0.2s'
-        }}
+        className="button"
         onClick={() => setStep(1)}
         disabled={!domain.trim() || dnsLoading || sheetsLoading}
       >
         {dnsLoading ? 'Checking…' : 'Check Email Records'}
       </button>
-      <div style={{margin:'0 auto', width:'100%', maxWidth:500}}>
-        {dnsError && <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.error} {dnsError}</div>}
-        {sheetsError && <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.error} {sheetsError}</div>}
-        {sheetsLoading && <div style={{color:'#2563eb', background:'#e0e7ef', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>Logging to Google Sheets…</div>}
+      <div className="status-panel">
+        {dnsError && <div className="status-error">{icons.error} {dnsError}</div>}
+        {sheetsError && <div className="status-error">{icons.error} {sheetsError}</div>}
+        {sheetsLoading && <div className="status-info">Logging to Google Sheets…</div>}
         {dnsResults && (
-          <div style={{background:'#f3faf7', borderRadius:12, padding:'20px 18px', marginBottom:16, border:'1px solid #d1fae5'}}>
-            <div style={{display:'flex', alignItems:'center', marginBottom:10}}>{icons.spf}<b>SPF Record</b>: <span style={{marginLeft:8}}>{dnsResults.spf?.status}</span></div>
-            <div style={{display:'flex', alignItems:'center', marginBottom:10}}>{icons.dmarc}<b>DMARC Record</b>: <span style={{marginLeft:8}}>{dnsResults.dmarc?.status}</span></div>
-            <div style={{display:'flex', alignItems:'center', marginBottom:10}}>{icons.dkim}<b>DKIM Record</b>: <span style={{marginLeft:8}}>{dnsResults.dkim?.status}</span></div>
+          <div className="status-success">
+            <div className="status-item"><span>{icons.spf}</span> SPF Record: <span>{dnsResults.spf?.status}</span></div>
+            <div className="status-item"><span>{icons.dmarc}</span> DMARC Record: <span>{dnsResults.dmarc?.status}</span></div>
+            <div className="status-item"><span>{icons.dkim}</span> DKIM Record: <span>{dnsResults.dkim?.status}</span></div>
             {/* MX record is not checked in logic, but you can add it here if needed */}
             {/* <div style={{display:'flex', alignItems:'center', marginBottom:10}}>{icons.mx}<b>MX Record</b>: <span style={{marginLeft:8}}>Found</span></div> */}
             {dnsResults.issues ? (
-              <div style={{background:'#fef3c7', color:'#92400e', borderRadius:8, padding:'12px 10px', marginTop:16, fontWeight:500, display:'flex', alignItems:'center'}}>
+              <div className="status-warning">
                 {icons.error} Issues found! Enter your email to see the full report and ROI calculator.
               </div>
             ) : (
-              <div style={{background:'#d1fae5', color:'#065f46', borderRadius:8, padding:'12px 10px', marginTop:16, fontWeight:500, display:'flex', alignItems:'center'}}>
+              <div className="status-success">
                 {icons.check} Great job! Your email infrastructure looks solid.
               </div>
             )}
@@ -527,18 +524,14 @@ export default function App() {
         )}
       </div>
       <button
-        style={{
-          width:'100%', maxWidth:260, margin:'0 auto 12px auto', display:'block', padding:'12px 0', background:'#2563eb', color:'#fff', fontWeight:600, fontSize:17, border:'none', borderRadius:8, cursor:'pointer', boxShadow:'0 2px 8px #bcd0e522', transition:'background 0.2s'
-        }}
+        className="button"
         onClick={() => setStep(2)}
         disabled={!dnsResults || !dnsResults.issues}
       >
         See Full Report & ROI Calculator
       </button>
       <button
-        style={{
-          width:'100%', maxWidth:120, margin:'0 auto', display:'block', padding:'10px 0', background:'#e0e7ef', color:'#2563eb', fontWeight:600, fontSize:16, border:'none', borderRadius:8, cursor:'pointer', marginTop:8
-        }}
+        className="button"
         onClick={() => setStep(0)}
       >
         Back
@@ -548,13 +541,11 @@ export default function App() {
 
   // Email Capture Gate (restyled)
   const renderEmailCapture = () => (
-    <section style={{width:'100%'}}>
-      <h2 style={{fontSize:20, fontWeight:700, color:'#1a2540', marginBottom:16, textAlign:'center', letterSpacing:'-0.5px'}}>{icons.email} What email should we send the results to?</h2>
-      <div style={{fontSize:15, color:'#374151', marginBottom:8, textAlign:'center'}}>We’ll also send you our deliverability guide and tips.</div>
+    <section className="section">
+      <h2 className="section-title">{icons.email} What email should we send the results to?</h2>
+      <p className="section-desc">We’ll also send you our deliverability guide and tips.</p>
       <input
-        style={{
-          width:'100%', maxWidth:340, margin:'0 auto 16px auto', display:'block', padding:'12px 16px', fontSize:17, border:'1px solid #bcd0e5', borderRadius:8, outline:'none', boxSizing:'border-box', textAlign:'center', background:'#f7fbff', fontWeight:500
-        }}
+        className="input"
         type="email"
         placeholder="Enter your email address"
         value={email}
@@ -563,9 +554,7 @@ export default function App() {
         disabled={klaviyoLoading}
       />
       <button
-        style={{
-          width:'100%', maxWidth:220, margin:'0 auto 12px auto', display:'block', padding:'12px 0', background:'#2563eb', color:'#fff', fontWeight:600, fontSize:17, border:'none', borderRadius:8, cursor:'pointer', boxShadow:'0 2px 8px #bcd0e522', transition:'background 0.2s'
-        }}
+        className="button"
         onClick={async () => {
           setKlaviyoLoading(true);
           setKlaviyoError("");
@@ -584,8 +573,8 @@ export default function App() {
       >
         {klaviyoLoading ? 'Submitting…' : 'See My Full Report & ROI Calculator'}
       </button>
-      {klaviyoError && <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.error} {klaviyoError}</div>}
-      {klaviyoSuccess && <div style={{color:'#22c55e', background:'#d1fae5', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.check} Success! Email submitted.</div>}
+      {klaviyoError && <div className="status-error">{icons.error} {klaviyoError}</div>}
+      {klaviyoSuccess && <div className="status-success">{icons.check} Success! Email submitted.</div>}
     </section>
   );
 
@@ -622,60 +611,60 @@ export default function App() {
 
   // ROI Calculator Section (restyled)
   const renderRoiCalculator = () => (
-    <section style={{width:'100%'}}>
-      <h2 style={{fontSize:20, fontWeight:700, color:'#1a2540', marginBottom:16, textAlign:'center', letterSpacing:'-0.5px'}}>{icons.calc} Email Marketing Performance Calculator</h2>
-      <div style={{fontSize:15, color:'#374151', marginBottom:16, textAlign:'center'}}>Brands like yours typically see <b>18–25% open rates</b>—how do you stack up?</div>
-      <div style={{display:'flex', flexWrap:'wrap', gap:12, justifyContent:'center', marginBottom:16}}>
-        <input style={{flex:'1 1 120px', minWidth:120, maxWidth:180, padding:'10px 12px', border:'1px solid #bcd0e5', borderRadius:8, fontSize:16, background:'#f7fbff', textAlign:'center'}} type="number" placeholder="List Size" value={roiInputs.listSize} onChange={e => setRoiInputs({...roiInputs, listSize: e.target.value})} min={1} />
-        <input style={{flex:'1 1 120px', minWidth:120, maxWidth:180, padding:'10px 12px', border:'1px solid #bcd0e5', borderRadius:8, fontSize:16, background:'#f7fbff', textAlign:'center'}} type="number" placeholder="Avg Order Value ($)" value={roiInputs.aov} onChange={e => setRoiInputs({...roiInputs, aov: e.target.value})} min={1} step={0.01} />
-        <input style={{flex:'1 1 120px', minWidth:120, maxWidth:180, padding:'10px 12px', border:'1px solid #bcd0e5', borderRadius:8, fontSize:16, background:'#f7fbff', textAlign:'center'}} type="number" placeholder="Open Rate (%)" value={roiInputs.openRate} onChange={e => setRoiInputs({...roiInputs, openRate: e.target.value})} min={0} max={100} step={0.1} />
-        <input style={{flex:'1 1 120px', minWidth:120, maxWidth:180, padding:'10px 12px', border:'1px solid #bcd0e5', borderRadius:8, fontSize:16, background:'#f7fbff', textAlign:'center'}} type="number" placeholder="Click-Through Rate (%)" value={roiInputs.ctr} onChange={e => setRoiInputs({...roiInputs, ctr: e.target.value})} min={0} max={100} step={0.1} />
+    <section className="section">
+      <h2 className="section-title">{icons.calc} Email Marketing Performance Calculator</h2>
+      <p className="section-desc">Brands like yours typically see <b>18–25% open rates</b>—how do you stack up?</p>
+      <div className="input-group">
+        <input className="input" type="number" placeholder="List Size" value={roiInputs.listSize} onChange={e => setRoiInputs({...roiInputs, listSize: e.target.value})} min={1} />
+        <input className="input" type="number" placeholder="Avg Order Value ($)" value={roiInputs.aov} onChange={e => setRoiInputs({...roiInputs, aov: e.target.value})} min={1} step={0.01} />
+        <input className="input" type="number" placeholder="Open Rate (%)" value={roiInputs.openRate} onChange={e => setRoiInputs({...roiInputs, openRate: e.target.value})} min={0} max={100} step={0.1} />
+        <input className="input" type="number" placeholder="Click-Through Rate (%)" value={roiInputs.ctr} onChange={e => setRoiInputs({...roiInputs, ctr: e.target.value})} min={0} max={100} step={0.1} />
       </div>
       <button
-        style={{width:'100%', maxWidth:260, margin:'0 auto 12px auto', display:'block', padding:'12px 0', background:'#059669', color:'#fff', fontWeight:600, fontSize:17, border:'none', borderRadius:8, cursor:'pointer', boxShadow:'0 2px 8px #05966922', transition:'background 0.2s'}}
+        className="button"
         onClick={() => { calculateRoi(); setStep(4); }}
         disabled={!(roiInputs.listSize && roiInputs.aov && roiInputs.openRate && roiInputs.ctr)}
       >
         Calculate My Revenue Impact
       </button>
       {roiResult && roiResult.error && (
-        <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.error} {roiResult.error}</div>
+        <div className="status-error">{icons.error} {roiResult.error}</div>
       )}
     </section>
   );
 
   // Results & Actions Section (restyled)
   const renderResults = () => (
-    <section style={{width:'100%'}}>
-      <h2 style={{fontSize:20, fontWeight:700, color:'#1a2540', marginBottom:16, textAlign:'center', letterSpacing:'-0.5px'}}>📊 Monthly Revenue Impact</h2>
-      <div style={{background:'#fee2e2', color:'#991b1b', borderRadius:12, padding:'24px 18px', marginBottom:16, border:'1px solid #fecaca', textAlign:'center', fontWeight:600, fontSize:28, letterSpacing:'-1px'}}>
+    <section className="section">
+      <h2 className="section-title">📊 Monthly Revenue Impact</h2>
+      <div className="result-impact">
         {roiResult && !roiResult.error ? (
           <>
-            <div style={{fontSize:18, color:'#991b1b', marginBottom:8, fontWeight:700}}>{icons.error} Monthly Revenue Impact</div>
+            <div className="result-item">{icons.error} Monthly Revenue Impact</div>
             ${Math.abs(roiResult.revenueImpact).toLocaleString()}
-            <div style={{fontSize:15, color:'#991b1b', marginTop:8, fontWeight:400}}>
+            <div className="result-desc">
               You’re potentially losing this much revenue per month due to poor email deliverability.
             </div>
-            <div style={{fontSize:15, color:'#991b1b', marginTop:8, fontWeight:400}}>
+            <div className="result-desc">
               Annual Impact: <b>${(Math.abs(roiResult.revenueImpact)*12).toLocaleString()}</b>
             </div>
           </>
         ) : (
-          <div style={{fontSize:16, color:'#991b1b'}}>{icons.error} Calculation will appear here after you enter your numbers.</div>
+          <div className="result-desc">{icons.error} Calculation will appear here after you enter your numbers.</div>
         )}
       </div>
-      <div style={{display:'flex', flexWrap:'wrap', gap:16, justifyContent:'center', marginBottom:16}}>
-        <div style={{flex:'1 1 220px', minWidth:220, background:'#f3faf7', borderRadius:10, padding:'16px 12px', border:'1px solid #d1fae5'}}>
-          <div style={{fontWeight:700, color:'#2563eb', marginBottom:4}}>Current Performance</div>
-          <div style={{fontSize:15, color:'#374151'}}>Open Rate: {roiInputs.openRate}%<br/>Revenue: ${roiResult?.currentRevenue?.toLocaleString() || 0}</div>
+      <div className="result-summary">
+        <div className="summary-item">
+          <div className="summary-label">Current Performance</div>
+          <div className="summary-value">Open Rate: {roiInputs.openRate}%<br/>Revenue: ${roiResult?.currentRevenue?.toLocaleString() || 0}</div>
         </div>
-        <div style={{flex:'1 1 220px', minWidth:220, background:'#f3faf7', borderRadius:10, padding:'16px 12px', border:'1px solid #d1fae5'}}>
-          <div style={{fontWeight:700, color:'#059669', marginBottom:4}}>Potential with Good Deliverability</div>
-          <div style={{fontSize:15, color:'#374151'}}>Open Rate: 22%<br/>Revenue: ${roiResult?.benchmarkRevenue?.toLocaleString() || 0}</div>
+        <div className="summary-item">
+          <div className="summary-label">Potential with Good Deliverability</div>
+          <div className="summary-value">Open Rate: 22%<br/>Revenue: ${roiResult?.benchmarkRevenue?.toLocaleString() || 0}</div>
         </div>
       </div>
       <button
-        style={{width:'100%', maxWidth:320, margin:'0 auto 12px auto', display:'block', padding:'12px 0', background:'#7c3aed', color:'#fff', fontWeight:600, fontSize:17, border:'none', borderRadius:8, cursor:'pointer', boxShadow:'0 2px 8px #7c3aed22', transition:'background 0.2s'}}
+        className="button"
         onClick={async () => {
           setGuideLoading(true);
           setGuideError("");
@@ -693,31 +682,31 @@ export default function App() {
       >
         {guideLoading ? 'Submitting…' : '✅ Get My Deliverability Fix-It Plan'}
       </button>
-      {guideError && <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.error} {guideError}</div>}
-      {guideSuccess && <div style={{color:'#22c55e', background:'#d1fae5', borderRadius:8, padding:12, marginBottom:12, textAlign:'center'}}>{icons.check} Guide sent! Check your inbox.</div>}
+      {guideError && <div className="status-error">{icons.error} {guideError}</div>}
+      {guideSuccess && <div className="status-success">{icons.check} Guide sent! Check your inbox.</div>}
       <a
         href="https://cal.com/stevenwagner/inboxsos"
         target="_blank"
         rel="noopener noreferrer"
-        style={{width:'100%', maxWidth:320, margin:'0 auto', display:'block', padding:'12px 0', background:'#fff', color:'#2563eb', border:'1px solid #2563eb', borderRadius:8, textAlign:'center', textDecoration:'none', fontWeight:600, fontSize:17, marginTop:8}}
+        className="action-link"
       >
         Hire Us to Fix It
       </a>
-      {sheetsError && <div style={{color:'#ef4444', background:'#fff0f0', borderRadius:8, padding:12, marginTop:12, textAlign:'center'}}>{icons.error} {sheetsError}</div>}
-      {sheetsLoading && <div style={{color:'#2563eb', background:'#e0e7ef', borderRadius:8, padding:12, marginTop:12, textAlign:'center'}}>Updating Google Sheets…</div>}
-      {sheetsSuccess && <div style={{color:'#22c55e', background:'#d1fae5', borderRadius:8, padding:12, marginTop:12, textAlign:'center'}}>{icons.check} Results saved to Google Sheets!</div>}
+      {sheetsError && <div className="status-error">{icons.error} {sheetsError}</div>}
+      {sheetsLoading && <div className="status-info">Updating Google Sheets…</div>}
+      {sheetsSuccess && <div className="status-success">{icons.check} Results saved to Google Sheets!</div>}
     </section>
   );
 
   // VSL Section (restyled)
   const renderVsl = () => (
-    <section style={{width:'100%', margin:'32px 0', textAlign:'center'}}>
-      <h2 style={{fontSize:20, fontWeight:700, color:'#1a2540', marginBottom:16, letterSpacing:'-0.5px'}}>{icons.guide} Watch: How to Fix Your Email Deliverability</h2>
-      <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 12, boxShadow: '0 2px 8px #bcd0e5', maxWidth: 600, margin:'0 auto'}}>
+    <section className="vsl-section">
+      <h2 className="section-title">{icons.guide} Watch: How to Fix Your Email Deliverability</h2>
+      <div className="vsl-video-container">
         <iframe
           src="https://www.youtube.com/embed/2e-yb2pQGgA"
           title="VSL"
-          style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0, borderRadius:12}}
+          className="vsl-video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
@@ -727,29 +716,29 @@ export default function App() {
 
   // Footer (restyled)
   const renderFooter = () => (
-    <footer style={{marginTop: 48, padding: '24px 0', background: 'rgba(10,37,64,0.95)', color: '#fff', textAlign: 'center', fontSize: 16, borderRadius:12, boxShadow:'0 2px 8px #1a254022', maxWidth:600, margin:'32px auto 0 auto'}}>
+    <footer className="footer">
       <div>
-        <a href="https://inboxsos.com" style={{color:'#60a5fa', textDecoration:'underline', margin:'0 8px'}} target="_blank" rel="noopener noreferrer">Website</a>
-        <a href="https://linkedin.com/in/stevenwagner" style={{color:'#60a5fa', textDecoration:'underline', margin:'0 8px'}} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://linktr.ee/stevenwagner" style={{color:'#60a5fa', textDecoration:'underline', margin:'0 8px'}} target="_blank" rel="noopener noreferrer">Linktree</a>
+        <a href="https://inboxsos.com" className="footer-link" target="_blank" rel="noopener noreferrer">Website</a>
+        <a href="https://linkedin.com/in/stevenwagner" className="footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://linktr.ee/stevenwagner" className="footer-link" target="_blank" rel="noopener noreferrer">Linktree</a>
       </div>
-      <div style={{marginTop: 8, fontSize: 14, color: '#bcd0e5'}}>© {new Date().getFullYear()} InboxSOS. All rights reserved.</div>
+      <div className="footer-copyright">© {new Date().getFullYear()} InboxSOS. All rights reserved.</div>
     </footer>
   );
 
   // Main render
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <div style={styles.appTitle}>
+    <div className="app-container">
+      <div className="app-header">
+        <div className="app-title">
           <span role="img" aria-label="email">📧</span> Email Delivery Checker & ROI Calculator
         </div>
-        <div style={styles.appSubtitle}>
+        <div className="app-subtitle">
           Analyze your email infrastructure and calculate the cost of poor deliverability
         </div>
       </div>
-      <main style={styles.main}>
-        <div style={styles.card}>
+      <main className="app-main">
+        <div className="card">
           {renderProgress()}
           {step === 0 && renderLanding()}
           {step === 1 && renderDnsCheck()}
